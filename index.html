@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LORE v21 Alpha</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#08070b;--card:#111017;--text:#f7f5ff;--muted:#92909d;--line:#26232e;--violet:#9b7cff;--cyan:#67e8f9}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:radial-gradient(circle at 50% -10%,#211735 0,#0b0910 35%,var(--bg) 65%);color:var(--text);font-family:Inter,Arial,sans-serif;min-height:100vh}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3' stitchTiles='stitch' type='fractalNoise'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+header{height:76px;position:fixed;z-index:10;inset:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 6vw;background:#08070bcc;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff0d}
+.logo{font-weight:900;font-size:21px;letter-spacing:-1px}.logo b{color:var(--violet)}
+nav{display:flex;gap:28px}nav a{color:#85818f;text-decoration:none;font-size:12px;font-weight:700}nav a:hover{color:white}
+.hero{min-height:100vh;padding:130px 6vw 90px;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;position:relative}
+.orb{position:absolute;width:650px;height:650px;background:radial-gradient(circle,#8e67ff20 0,#5c3c9b0d 35%,transparent 68%);filter:blur(5px)}
+.kicker{font-size:10px;letter-spacing:5px;color:#817b91;font-weight:800;margin-bottom:25px}
+h1{font-size:clamp(70px,13vw,160px);line-height:.8;letter-spacing:-.09em;font-weight:900;background:linear-gradient(110deg,#fff 15%,#c5b8ff 55%,#7ee8f7 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:32px}
+.hero>p{max-width:540px;color:#85818f;font-size:14px;line-height:1.7;margin-bottom:48px}
+.cards{width:min(1120px,100%);display:grid;grid-template-columns:repeat(3,1fr);gap:15px;position:relative}
+.card{min-height:260px;padding:28px;text-align:left;text-decoration:none;color:white;background:linear-gradient(145deg,#15121c,#0e0d12);border:1px solid var(--line);border-radius:18px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative;transition:.3s}
+.card:before{content:"";position:absolute;width:180px;height:180px;right:-80px;top:-90px;border-radius:50%;background:var(--accent);filter:blur(60px);opacity:.16}
+.card:hover{transform:translateY(-8px);border-color:#5a5368;box-shadow:0 20px 60px #0008}
+.card>*{position:relative}.number{font-size:10px;color:#615c69;letter-spacing:2px}.icon{font-size:27px;margin-top:14px;color:var(--accent)}
+.card h2{font-size:23px;letter-spacing:-.04em;margin-top:auto}.card p{font-size:11px;color:#77727f;margin-top:8px}.arrow{font-size:20px;color:#77727f;align-self:flex-end;transition:.25s}.card:hover .arrow{color:white;transform:translate(4px,-4px)}
+section{min-height:70vh;padding:110px 7vw;border-top:1px solid #ffffff0b;display:flex;align-items:center}.inner{width:min(1120px,100%);margin:auto}
+.label{font-size:10px;letter-spacing:4px;color:#716b7c;margin-bottom:16px}section h3{font-size:clamp(42px,7vw,78px);letter-spacing:-.07em;margin-bottom:18px}section p{max-width:650px;color:#85818f;line-height:1.7}
+.panel{margin-top:32px;padding:24px;border:1px solid var(--line);border-radius:16px;background:#0f0e14}
+.panel-title{font-weight:800;margin-bottom:8px}.panel small{color:#706b77}
+.actions{display:flex;gap:12px;margin-top:25px;flex-wrap:wrap}
+.btn{border:1px solid #383440;background:#17141e;color:white;text-decoration:none;border-radius:11px;padding:13px 18px;font-size:12px;font-weight:800;cursor:pointer}.btn:hover{border-color:#7665a0;background:#1d1928}.btn.primary{background:linear-gradient(100deg,#8969ed,#5ebfd0);border:0;color:#09080d}
+.services{display:none;margin-top:18px;grid-template-columns:repeat(2,1fr);gap:10px}.services.open{display:grid}.service{padding:18px;border:1px solid #292632;border-radius:12px;background:#121018}.service strong{font-size:13px}.service span{display:block;color:#6f6a77;font-size:10px;margin-top:5px}
+footer{border-top:1px solid #ffffff0b;padding:32px 7vw;color:#55515c;font-size:10px;display:flex;justify-content:space-between}
+
+.lang-wrap{position:relative;margin-left:22px;text-align:right}.lang-btn{border:1px solid #2d2936;background:#111017;color:#d9d5e1;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:800;letter-spacing:.5px;cursor:pointer}.lang-btn span{color:#827b8d;margin-left:5px}.lang-btn:hover{border-color:#5d526e}.current-lang{display:flex;justify-content:flex-end;align-items:center;gap:6px;color:#625e6b;font-size:8px;font-weight:600;margin-top:5px;margin-right:3px}.lang-menu{display:none;position:absolute;right:0;top:62px;width:150px;padding:6px;background:#111017;border:1px solid #2d2936;border-radius:11px;box-shadow:0 18px 45px #0009}.lang-menu.open{display:block}.lang-menu button{display:flex;align-items:center;width:100%;gap:9px;border:0;background:transparent;color:#d9d5e1;padding:10px;border-radius:7px;font-size:11px;font-weight:700;text-align:left;cursor:pointer}.lang-menu button:hover{background:#1b1822;color:white}
+
+
+
+
+
+
+
+
+
+
+
+.service-btn{appearance:none;text-align:left;width:100%;font:inherit;color:inherit;cursor:pointer;transition:.2s}
+.service-btn:hover{transform:translateY(-2px);border-color:#675b80;background:#17131f}
+.service-btn strong,.service-btn span{pointer-events:none}
+.service-modal{display:none;position:fixed;inset:0;z-index:50;align-items:center;justify-content:center;padding:20px}
+.service-modal.open{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:#030208cc;backdrop-filter:blur(10px)}
+.modal{position:relative;width:min(520px,100%);padding:30px;border:1px solid #3b3448;border-radius:18px;background:linear-gradient(145deg,#17131e,#0d0c12);box-shadow:0 30px 100px #000b;z-index:1}
+.modal-close{position:absolute;right:16px;top:12px;background:none;border:0;color:#77717f;font-size:27px;cursor:pointer}
+.modal-close:hover{color:white}
+.modal-label{font-size:9px;letter-spacing:4px;color:#706a79;margin-bottom:9px}
+.modal h4{font-size:30px;letter-spacing:-.05em;margin-bottom:22px}
+.range-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field label{display:block;color:#77717e;font-size:10px;font-weight:700;margin-bottom:7px}
+.field select,.field input{width:100%;border:1px solid #302b38;background:#0e0d13;color:#eee;border-radius:10px;padding:13px;font:inherit;font-size:12px;outline:none;transition:.2s;appearance:none;-webkit-appearance:none;color-scheme:dark}.field select{background-image:linear-gradient(45deg,transparent 50%,#777 50%),linear-gradient(135deg,#777 50%,transparent 50%);background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px}.field select option{background:#111017;color:#eee}.field select:hover,.field input:hover{border-color:#4b4357}.field select:focus,.field input:focus{border-color:#7a62aa;box-shadow:0 0 0 3px #7a62aa18}
+.field select:focus,.field input:focus{border-color:#7a62aa}
+.range-note{margin-top:10px;color:#5f5a66;font-size:10px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+
+.rank-pickers{display:grid;grid-template-columns:1fr 30px 1fr;gap:10px;align-items:end}
+.rank-picker label{display:block;color:#77717e;font-size:10px;font-weight:700;margin-bottom:7px}
+.rank-wheel{height:220px;overflow-y:auto;border:1px solid #302b38;border-radius:12px;background:#0e0d13;padding:6px;scrollbar-width:thin;scrollbar-color:#40384d transparent}
+.rank-wheel::-webkit-scrollbar{width:6px}.rank-wheel::-webkit-scrollbar-track{background:transparent}.rank-wheel::-webkit-scrollbar-thumb{background:#40384d;border-radius:8px}
+.rank-option{display:block;width:100%;padding:10px 12px;margin:2px 0;border:0;border-radius:8px;background:transparent;color:#8c8793;text-align:left;font:inherit;font-size:12px;cursor:pointer;transition:.15s}
+.rank-option:hover{background:#1a1622;color:#fff}.rank-option.selected{background:linear-gradient(100deg,#7658d8,#4faec2);color:#fff;font-weight:700}.rank-option.disabled{opacity:.28;pointer-events:none}
+.rank-arrow{color:#706978;font-size:18px;text-align:center;padding-bottom:9px}
+@media(max-width:760px){.rank-pickers{grid-template-columns:1fr}.rank-arrow{display:none}}
+@media(max-width:760px){.range-row{grid-template-columns:1fr}.modal{padding:24px}.modal-actions{flex-direction:column}.modal-actions .btn{text-align:center}}
+@media(max-width:760px){nav{display:none}.cards{grid-template-columns:1fr}.card{min-height:205px}.services{grid-template-columns:1fr}footer{display:block;line-height:2.2}}
+
+.product-modal{display:none;position:fixed;inset:0;z-index:60;align-items:center;justify-content:center;padding:20px}
+.product-modal.open{display:flex}
+.product-backdrop{position:absolute;inset:0;background:#030208cc;backdrop-filter:blur(12px)}
+.product-box{position:relative;z-index:1;width:min(560px,100%);padding:32px;border:1px solid #3b3448;border-radius:20px;background:linear-gradient(145deg,#17131e,#0d0c12);box-shadow:0 30px 100px #000b}
+.product-close{position:absolute;right:16px;top:10px;background:none;border:0;color:#77717f;font-size:28px;cursor:pointer}
+.product-kicker{font-size:9px;letter-spacing:4px;color:#756d82;margin-bottom:8px}
+.product-box h3{font-size:32px;letter-spacing:-.05em;margin-bottom:10px}
+.product-box>p{color:#918b98;line-height:1.6;font-size:13px;margin-bottom:18px}
+.product-status{display:flex;align-items:center;gap:9px;padding:12px 14px;border:1px solid #292530;background:#0d0c12;border-radius:10px;color:#79727f;font-size:9px;letter-spacing:1.2px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#77717f;box-shadow:0 0 10px #77717f66}
+.product-info{margin-top:14px;padding:15px;border-radius:10px;background:#121018;color:#77717f;font-size:11px;line-height:1.7}
+.product-actions{display:flex;justify-content:flex-end;margin-top:20px}
+body::before{content:"";position:fixed;inset:0;background:
+radial-gradient(circle at 20% 20%,rgba(155,124,255,.18),transparent 35%),
+radial-gradient(circle at 80% 30%,rgba(103,232,249,.15),transparent 35%);
+animation:floatbg 10s ease-in-out infinite alternate;pointer-events:none}
+@keyframes floatbg{from{transform:translateY(0)}to{transform:translateY(-30px)}}
+.glow-btn{box-shadow:0 0 25px rgba(155,124,255,.35)}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">LORE<b>™</b></div>
+<nav><a href="#services" data-i18n="navServices">SERVICES</a><a href="#about" data-i18n="navAbout">ABOUT</a></nav>
+<div class="lang-wrap">
+<button class="lang-btn" onclick="toggleLangMenu()"><span data-i18n="langLabel">LANGUAGE</span> <span>⌄</span></button>
+<div class="current-lang" id="currentLang"><span id="currentLangName">English</span></div>
+<div class="lang-menu" id="langMenu">
+<button onclick="setLanguage('en')"> English</button>
+<button onclick="setLanguage('ru')"> Русский</button>
+</div>
+</div>
+</header>
+
+<section class="hero" id="services">
+<div class="orb"></div><div class="kicker" data-i18n="heroKicker">THE GAMING NETWORK</div><h1>LORE</h1>
+<p data-i18n="heroText">Performance tools and professional services built for competitive gaming.</p>
+<div class="cards">
+<a class="card" style="--accent:#9b7cff" href="#vpn" onclick="openProduct(event,'vpn')"><div><div class="number">001</div><div class="icon">↯</div></div><div><h2>LORE VPN</h2><p data-i18n="vpnCardText">Low-latency routing for gaming.</p></div><div class="arrow">↗</div></a>
+<a class="card" style="--accent:#67e8f9" href="#dns" onclick="openProduct(event,'dns')"><div><div class="number">002</div><div class="icon">◌</div></div><div><h2>LORE DNS</h2><p data-i18n="dnsCardText">Fast DNS infrastructure for games.</p></div><div class="arrow">↗</div></a>
+<a class="card" style="--accent:#ff79c8" href="#boost" onclick="smoothTo(event,'boost')"><div><div class="number">003</div><div class="icon">↑</div></div><div><h2>BOOST SERVICE</h2><p data-i18n="boostCardText">Professional Brawl Stars boosting.</p></div><div class="arrow">↗</div></a>
+</div>
+</section>
+
+<section id="vpn"><div class="inner"><div class="label">001 — LORE VPN</div><h3 data-i18n="vpnTitle">LORE VPN</h3><p data-i18n="vpnText">Your VPN product page is ready for plans, regions, pricing and activation.</p><div class="panel"><div class="panel-title" data-i18n="vpnPanel">VPN CONTROL PANEL</div><small data-i18n="vpnSmall">Backend connection / subscription system will be connected here.</small><div class="actions"><button class="btn primary" onclick="alert('VPN backend will be connected here.')"><span data-i18n="vpnBtn">CONNECT</span></button></div></div></div></section>
+
+<section id="dns"><div class="inner"><div class="label">002 — LORE DNS</div><h3 data-i18n="dnsTitle">LORE DNS</h3><p data-i18n="dnsText">Your gaming DNS page is ready for server selection, setup and status.</p><div class="panel"><div class="panel-title" data-i18n="dnsPanel">DNS CONTROL PANEL</div><small data-i18n="dnsSmall">DNS endpoint and configuration will be connected here.</small><div class="actions"><button class="btn primary" onclick="alert('DNS backend will be connected here.')"><span data-i18n="dnsBtn">ACTIVATE</span></button></div></div></div></section>
+
+<section id="boost"><div class="inner"><div class="label">003 — BOOST SERVICE</div><h3 data-i18n="boostTitle">BOOST SERVICE</h3><p data-i18n="boostText">Choose an action below.</p><div class="actions">
+<a class="btn primary" href="https://t.me/fallenyoung" target="_blank" data-i18n="orderNow">ORDER NOW ↗</a>
+<button class="btn" onclick="document.getElementById('serviceList').classList.toggle('open')"><span data-i18n="seeServices">SEE SERVICES ↓</span></button>
+</div>
+
+<div class="services" id="serviceList">
+  <button class="service service-btn" onclick="openService('trophies')"><strong data-i18n="trophies">Trophies</strong><span data-i18n="chooseTrophies">Choose trophy range</span></button>
+  <button class="service service-btn" onclick="openService('ranked')"><strong data-i18n="ranked">Ranked</strong><span data-i18n="chooseRanked">Choose rank from → to</span></button>
+  <button class="service service-btn" onclick="openService('prestige')"><strong data-i18n="prestige">Prestige</strong><span data-i18n="choosePrestige">Choose prestige range</span></button>
+  <button class="service service-btn" onclick="openService('matcherino')"><strong data-i18n="matcherino">Matcherino</strong><span data-i18n="chooseMatcherino">Choose a service option</span></button>
+  <button class="service service-btn" onclick="openService('winstreak')"><strong data-i18n="winstreak">Winstreak</strong><span data-i18n="chooseWinstreak">Choose streak from → to</span></button>
+</div>
+
+<div class="service-modal" id="serviceModal" aria-hidden="true">
+  <div class="modal-backdrop" onclick="closeService()"></div>
+  <div class="modal">
+    <button class="modal-close" onclick="closeService()">×</button>
+    <div class="modal-label" id="modalLabel">SERVICE</div>
+    <h4 id="modalTitle">Trophies</h4>
+    <div id="modalContent"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeService()">CANCEL</button>
+      <a class="btn primary" href="https://t.me/fallenyoung" target="_blank" id="modalOrder">ORDER NOW ↗</a>
+    </div>
+  </div>
+</div>
+
+
+<section id="about"><div class="inner"><div class="label">LORE NETWORK</div><h3 data-i18n="aboutTitle">BUILT FOR THE GRIND.</h3><p data-i18n="aboutText">Clean foundation for the LORE ecosystem. We can add descriptions, pricing, accounts, payments and real backend functionality next.</p></div></section>
+<footer><span>© 2026 LORE™</span><span data-i18n="footerNetwork">GAMING NETWORK</span></footer>
+
+<script>
+const translations = {
+  en: {
+    langLabel:"LANGUAGE", navServices:"SERVICES", navAbout:"ABOUT",
+    heroKicker:"THE GAMING NETWORK",
+    heroText:"Performance tools and professional services built for competitive gaming.",
+    vpnTitle:"LORE VPN", vpnText:"Your VPN product page is ready for plans, regions, pricing and activation.", vpnCardText:"Low-latency routing for gaming.",
+    vpnPanel:"VPN CONTROL PANEL", vpnSmall:"Backend connection / subscription system will be connected here.", vpnBtn:"CONNECT",
+    dnsTitle:"LORE DNS", dnsText:"Your gaming DNS page is ready for server selection, setup and status.", dnsCardText:"Fast DNS infrastructure for games.",
+    dnsPanel:"DNS CONTROL PANEL", dnsSmall:"DNS endpoint and configuration will be connected here.", dnsBtn:"ACTIVATE",
+    boostTitle:"BOOST SERVICE", boostText:"Choose an action below.", boostCardText:"Professional Brawl Stars boosting.",
+    orderNow:"ORDER NOW ↗", seeServices:"SEE SERVICES ↓",
+    aboutTitle:"BUILT FOR THE GRIND.",
+    aboutText:"Clean foundation for the LORE ecosystem. We can add descriptions, pricing, accounts, payments and real backend functionality next.",
+    footerNetwork:"GAMING NETWORK"
+  },
+  ru: {
+    langLabel:"ЯЗЫК", navServices:"УСЛУГИ", navAbout:"О НАС",
+    heroKicker:"ИГРОВАЯ СЕТЬ",
+    heroText:"Инструменты производительности и профессиональные услуги для соревновательной игры.",
+    vpnTitle:"LORE VPN", vpnText:"Страница VPN готова для тарифов, регионов, цен и активации.", vpnCardText:"Маршрутизация с низкой задержкой для игр.",
+    vpnPanel:"ПАНЕЛЬ VPN", vpnSmall:"Подключение backend / система подписок будет добавлена здесь.", vpnBtn:"ПОДКЛЮЧИТЬ",
+    dnsTitle:"LORE DNS", dnsText:"Страница игрового DNS готова для выбора серверов, настройки и статуса.", dnsCardText:"Быстрая DNS-инфраструктура для игр.",
+    dnsPanel:"ПАНЕЛЬ DNS", dnsSmall:"DNS endpoint и конфигурация будут добавлены здесь.", dnsBtn:"АКТИВИРОВАТЬ",
+    boostTitle:"БУСТ СЕРВИС", boostText:"Выберите действие ниже.", boostCardText:"Профессиональный бустинг Brawl Stars.",boostCardText:"Профессиональный бустинг Brawl Stars.",
+    orderNow:"ЗАКАЗАТЬ ↗", seeServices:"УСЛУГИ ↓",
+    aboutTitle:"БУДЬ В ИГРЕ.",
+    aboutText:"Основа экосистемы LORE. Позже добавим описания, цены, аккаунты, оплату и полноценный backend.",
+    footerNetwork:"ИГРОВАЯ СЕТЬ"
+  }
+};
+
+function setLanguage(lang) {
+  if (lang !== "ru" && lang !== "en") lang = "en";
+  localStorage.setItem("loreLang_v20", lang);
+  document.documentElement.lang = lang === "ru" ? "ru" : "en";
+
+  document.querySelectorAll("[data-i18n]").forEach(function(el) {
+    var key = el.getAttribute("data-i18n");
+    if (translations[lang] && Object.prototype.hasOwnProperty.call(translations[lang], key)) {
+      el.textContent = translations[lang][key];
+    }
+  });
+
+  var name = document.getElementById("currentLangName");
+  if (name) name.textContent = lang === "ru" ? "Русский" : "English";
+
+  var menu = document.getElementById("langMenu");
+  if (menu) menu.classList.remove("open");
+}
+
+function toggleLangMenu() {
+  const menu = document.getElementById("langMenu");
+  if (menu) menu.classList.toggle("open");
+}
+
+document.addEventListener("click", function(e) {
+  if (!e.target.closest(".lang-wrap")) {
+    const menu = document.getElementById("langMenu");
+    if (menu) menu.classList.remove("open");
+  }
+});
+
+
+</script>
+
+<script>
+const serviceRankOptions = [
+  "Bronze 1","Bronze 2","Bronze 3",
+  "Silver 1","Silver 2","Silver 3",
+  "Gold 1","Gold 2","Gold 3",
+  "Diamond 1","Diamond 2","Diamond 3",
+  "Mythic 1","Mythic 2","Mythic 3",
+  "Legendary 1","Legendary 2","Legendary 3",
+  "Master 1","Master 2","Master 3",
+  "Pro League"
+];
+
+const serviceText = {
+  en:{
+    trophies:"Trophies",ranked:"Ranked",prestige:"Prestige",matcherino:"Matcherino",winstreak:"Winstreak",
+    chooseTrophies:"Choose trophy range",chooseRanked:"Choose rank from → to",choosePrestige:"Choose prestige range",
+    chooseMatcherino:"Choose a service option",chooseWinstreak:"Choose streak from → to",
+    from:"From",to:"To",order:"ORDER NOW ↗",cancel:"CANCEL",service:"SERVICE",
+    trophyNote:"Maximum: 300,000 trophies",prestigeNote:"Range: 0–3",winNote:"Maximum: 100 wins",
+    select:"Select",matcherinoInfo:"Matcherino options will be configured next."
+  },
+  ru:{
+    trophies:"Trophies",ranked:"Ranked",prestige:"Prestige",matcherino:"Matcherino",winstreak:"Winstreak",
+    chooseTrophies:"Выберите диапазон трофеев",chooseRanked:"Выберите звание от → до",choosePrestige:"Выберите диапазон престижа",
+    chooseMatcherino:"Выберите вариант услуги",chooseWinstreak:"Выберите винстрик от → до",
+    from:"От",to:"До",order:"ЗАКАЗАТЬ ↗",cancel:"ОТМЕНА",service:"УСЛУГА",
+    trophyNote:"Максимум: 300 000 трофеев",prestigeNote:"Диапазон: 0–3",winNote:"Максимум: 100 побед",
+    select:"Выбрать",matcherinoInfo:"Варианты Matcherino настроим позже."
+  }
+};
+
+function smoothTo(event,id){
+  event.preventDefault();
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function currentLang(){ return localStorage.getItem("loreLang_v20") || "en"; }
+function tr(key){ return serviceText[currentLang()][key] || serviceText.en[key] || key; }
+
+function optionList(values, selected=0){
+  return values.map((v,i)=>`<option value="${i}" ${i===selected?"selected":""}>${v}</option>`).join("");
+}
+function makeRankPicker(id, initial, disabledLast){
+  const el=document.getElementById(id);
+  let value=initial;
+  const render=()=>{
+    el.innerHTML="";
+    const choices=serviceRankOptions.map((name,i)=>({name,i})).filter(x=>disabledLast ? x.i<serviceRankOptions.length-1 : true);
+    choices.forEach(x=>{
+      const b=document.createElement("button");
+      b.type="button"; b.className="rank-option"+(x.i===value?" selected":"");
+      b.textContent=x.name;
+      b.onclick=()=>{ value=x.i; render(); updateRankConstraint(); };
+      el.appendChild(b);
+    });
+    const selected=el.querySelector(".selected");
+    if(selected) selected.scrollIntoView({block:"nearest"});
+  };
+  render();
+  return {get:()=>value,set:(v)=>{value=v;render();}};
+}
+function updateRankConstraint(){
+  if(!window.rankFromPicker || !window.rankToPicker)return;
+  const from=window.rankFromPicker.get();
+  const to=window.rankToPicker.get();
+  if(to<=from) window.rankToPicker.set(Math.min(serviceRankOptions.length-1,from+1));
+  const fromEl=document.getElementById("rankFromWheel");
+  const toEl=document.getElementById("rankToWheel");
+  if(fromEl){
+    [...fromEl.children].forEach((b,i)=>{b.classList.toggle("disabled",i>=serviceRankOptions.length-1);});
+  }
+}
+function bindRangeSimple(fromId,toId){
+  const from=document.getElementById(fromId), to=document.getElementById(toId);
+  const sync=()=>{
+    const n=Number(from.value)||0;
+    [...to.options].forEach((o,i)=>o.disabled=i<=n);
+    if(Number(to.value)<=n) to.value=String(Math.min(3,n+1));
+  };
+  from.addEventListener("change",sync); to.addEventListener("change",sync); sync();
+}
+function bindNumericRange(fromId,toId,max){
+  const from=document.getElementById(fromId), to=document.getElementById(toId);
+  const clean=(el)=>{
+    el.value=el.value.replace(/[^0-9]/g,"");
+    let n=Number(el.value);
+    if(!Number.isFinite(n)) n=0;
+    n=Math.max(0,Math.min(max,n));
+    el.value=String(n);
+  };
+  from.addEventListener("input",()=>{clean(from); const n=Number(from.value)||0; if(Number(to.value)<=n) to.value=String(Math.min(max,n+1));});
+  to.addEventListener("input",()=>{clean(to); const n=Number(from.value)||0; if(Number(to.value)<=n) to.value=String(Math.min(max,n+1));});
+  from.addEventListener("blur",()=>clean(from)); to.addEventListener("blur",()=>clean(to));
+  if(Number(to.value)<=Number(from.value)) to.value=String(Math.min(max,Number(from.value)+1));
+}
+function openService(type){
+  const modal=document.getElementById("serviceModal");
+  const content=document.getElementById("modalContent");
+  const title=document.getElementById("modalTitle");
+  document.getElementById("modalLabel").textContent=tr("service");
+
+  if(type==="trophies"){
+    title.textContent=tr("trophies");
+    const vals=Array.from({length:300001},(_,i)=>i);
+    content.innerHTML=`<div class="range-row">
+      <div class="field"><label>${tr("from")}</label><input id="rangeFrom" type="text" inputmode="numeric" maxlength="6" value="0"></div>
+      <div class="field"><label>${tr("to")}</label><input id="rangeTo" type="text" inputmode="numeric" maxlength="6" value="300000"></div>
+    </div><div class="range-note">${tr("trophyNote")}</div>`;
+    bindNumericRange("rangeFrom","rangeTo",300000);
+  } else if(type==="ranked"){
+    title.textContent=tr("ranked");
+    content.innerHTML=`<div class="rank-pickers">
+      <div class="rank-picker">
+        <label>${tr("from")}</label>
+        <div class="rank-wheel" id="rankFromWheel"></div>
+      </div>
+      <div class="rank-arrow">→</div>
+      <div class="rank-picker">
+        <label>${tr("to")}</label>
+        <div class="rank-wheel" id="rankToWheel"></div>
+      </div>
+    </div>`;
+    window.rankFromPicker=makeRankPicker("rankFromWheel",0,true);
+    window.rankToPicker=makeRankPicker("rankToWheel",serviceRankOptions.length-1,false);
+  } else if(type==="prestige"){
+    title.textContent=tr("prestige");
+    const vals=["0","1","2","3"];
+    content.innerHTML=`<div class="range-row">
+      <div class="field"><label>${tr("from")}</label><select id="prestigeFrom">${optionList(vals.slice(0,3))}</select></div>
+      <div class="field"><label>${tr("to")}</label><select id="prestigeTo">${optionList(vals,3)}</select></div>
+    </div><div class="range-note">${tr("prestigeNote")}</div>`;
+    bindRangeSimple("prestigeFrom","prestigeTo");
+  } else if(type==="winstreak"){
+    title.textContent=tr("winstreak");
+    content.innerHTML=`<div class="range-row">
+      <div class="field"><label>${tr("from")}</label><input id="winFrom" type="text" inputmode="numeric" maxlength="3" value="0"></div>
+      <div class="field"><label>${tr("to")}</label><input id="winTo" type="text" inputmode="numeric" maxlength="3" value="100"></div>
+    </div><div class="range-note">${tr("winNote")}</div>`;
+    bindNumericRange("winFrom","winTo",100);
+  } else {
+    title.textContent=tr("matcherino");
+    content.innerHTML=`<div class="panel"><small>${tr("matcherinoInfo")}</small></div>`;
+  }
+  document.getElementById("modalOrder").textContent=tr("order");
+  document.querySelector(".modal-actions .btn:not(.primary)").textContent=tr("cancel");
+  modal.classList.add("open"); modal.setAttribute("aria-hidden","false");
+}
+function closeService(){
+  const modal=document.getElementById("serviceModal");
+  modal.classList.remove("open"); modal.setAttribute("aria-hidden","true");
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeService()});
+</script>
+
+
+
+<div class="product-modal" id="productModal" aria-hidden="true">
+  <div class="product-backdrop" onclick="closeProduct()"></div>
+  <div class="product-box">
+    <button class="product-close" onclick="closeProduct()">×</button>
+    <div class="product-kicker" id="productKicker">LORE</div>
+    <h3 id="productTitle">LORE VPN</h3>
+    <p id="productDescription"></p>
+    <div class="product-status"><span class="status-dot"></span><span id="productStatus">TEST SERVER — NOT CONNECTED</span></div>
+    <div class="product-info" id="productInfo"></div>
+    <div class="product-actions">
+      <button class="btn primary" id="productAction" onclick="productAction()">COMING SOON</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const loreProducts={
+  vpn:{
+    title:"LORE VPN",
+    en:"Private VPN access using a system-supported VPN connection. The first test will use IKEv2/IPsec so users do not need a separate WireGuard app.",
+    ru:"Приватный VPN-доступ через системное VPN-подключение. Для первого теста используем IKEv2/IPsec, поэтому отдельное приложение WireGuard не потребуется.",
+    infoEn:"Server setup is the next step. After the server is configured, this panel can contain the server address, username/password or profile instructions.",
+    infoRu:"Настройка сервера — следующий шаг. После запуска сервера здесь появятся адрес сервера, данные подключения и инструкция.",
+  },
+  dns:{
+    title:"LORE DNS",
+    en:"A dedicated DNS resolver for LORE. We will test it separately from the VPN and then connect the working resolver to this page.",
+    ru:"Выделенный DNS-резолвер LORE. Мы отдельно протестируем его, а затем подключим рабочий DNS к этой странице.",
+    infoEn:"DNS endpoint and setup instructions will be added after the resolver is running.",
+    infoRu:"Адрес DNS и инструкция появятся после запуска резолвера.",
+  }
+};
+function openProduct(e,type){
+  e.preventDefault();
+  const p=loreProducts[type], ru=localStorage.getItem("loreLang")==="ru";
+  document.getElementById("productKicker").textContent="LORE";
+  document.getElementById("productTitle").textContent=p.title;
+  document.getElementById("productDescription").textContent=ru?p.ru:p.en;
+  document.getElementById("productInfo").textContent=ru?p.infoRu:p.infoEn;
+  document.getElementById("productStatus").textContent=ru?"ТЕСТОВЫЙ СЕРВЕР — НЕ ПОДКЛЮЧЁН":"TEST SERVER — NOT CONNECTED";
+  document.getElementById("productAction").textContent=ru?"СКОРО":"COMING SOON";
+  document.getElementById("productModal").classList.add("open");
+  document.getElementById("productModal").setAttribute("aria-hidden","false");
+}
+function closeProduct(){
+  document.getElementById("productModal").classList.remove("open");
+  document.getElementById("productModal").setAttribute("aria-hidden","true");
+}
+function productAction(){ return; }
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeProduct()});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  // v20: always English on the first visit to this version; subsequent choice is remembered.
+  setLanguage(localStorage.getItem("loreLang_v20") || "en");
+});
+</script>
+</body>
+</html>
